@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Floating Chart Widget</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 304px;
+        background: #0D0D10;
+        color: #FFFFFF;
+        font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .panel {
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .hdr {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #141418;
+        border: 1px solid #26262E;
+        border-radius: 10px;
+        padding: 9px 10px;
+      }
+      .hdr-title {
+        font-size: 12.5px;
+        font-weight: 700;
+        color: #FFFFFF;
+      }
+      .hdr-sub {
+        font-size: 10px;
+        color: #A1A1AA;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+      .badge {
+        background: #141418;
+        border: 1px solid #26262E;
+        color: #E4E4E7;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 3px 7px;
+        border-radius: 6px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+      .card {
+        background: #141418;
+        border: 1px solid #26262E;
+        border-radius: 10px;
+        padding: 9px 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+      }
+      .lbl {
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #A1A1AA;
+      }
+      .grid-5 {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 4px;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+      }
+      button {
+        appearance: none;
+        background: #141418;
+        border: 1px solid #26262E;
+        color: #E4E4E7;
+        font-family: inherit;
+        font-size: 11px;
+        font-weight: 600;
+        border-radius: 7px;
+        padding: 7px 8px;
+        cursor: pointer;
+        transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+      }
+      button:hover {
+        background: #1C1C22;
+        border-color: #383842;
+        color: #FFFFFF;
+      }
+      button.is-primary,
+      button.is-active {
+        background: #FFFFFF;
+        border-color: #FFFFFF;
+        color: #000000;
+        font-weight: 700;
+      }
+      .status-line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 10px;
+        color: #A1A1AA;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        padding: 0 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="panel">
+      <header class="hdr">
+        <div>
+          <div class="hdr-title">Floating Chart Widget</div>
+          <div class="hdr-sub">Shadow-DOM Overlay</div>
+        </div>
+        <span class="badge" id="ext-state-badge">Hidden</span>
+      </header>
+
+      <section class="card">
+        <button type="button" class="is-primary" id="btn-toggle-widget">Toggle Widget on Tab</button>
+        <div class="grid-2">
+          <button type="button" id="btn-push-spike">+ Push Spike</button>
+          <button type="button" id="btn-reset-pos">Reset Position</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="lbl">Data Source</div>
+        <div class="grid-5" id="source-group">
+          <button type="button" data-source="stream" class="is-active">Stream</button>
+          <button type="button" data-source="fps">FPS</button>
+          <button type="button" data-source="heap">Heap</button>
+          <button type="button" data-source="dom">DOM</button>
+          <button type="button" data-source="latency">Net</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="lbl">Tick Rate</div>
+        <div class="grid-3" id="cadence-group">
+          <button type="button" data-cadence="1s" class="is-active">1s</button>
+          <button type="button" data-cadence="5s">5s</button>
+          <button type="button" data-cadence="pause">Pause</button>
+        </div>
+      </section>
+
+      <footer class="status-line">
+        <span id="popup-msg">Ready</span>
+        <span>Alt+Shift+W</span>
+      </footer>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>
