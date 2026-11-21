@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Custom API Latency Feed Example</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        background: #0B0B0E;
+        color: #E4E4E7;
+        font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+      }
+      main {
+        max-width: 640px;
+        padding: 40px 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      h1 {
+        margin: 0;
+        font-size: 24px;
+        color: #FFFFFF;
+      }
+      p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.55;
+        color: #A1A1AA;
+      }
+      .card {
+        background: #141418;
+        border: 1px solid #26262E;
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      button {
+        background: #141418;
+        border: 1px solid #26262E;
+        color: #E4E4E7;
+        border-radius: 8px;
+        padding: 8px 14px;
+        font-size: 12.5px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      button.primary {
+        background: #FFFFFF;
+        border-color: #FFFFFF;
+        color: #000000;
+        font-weight: 700;
+      }
+      pre {
+        margin: 0;
+        padding: 12px;
+        background: #0D0D10;
+        border: 1px solid #26262E;
+        border-radius: 8px;
+        color: #E4E4E7;
+        font-size: 12px;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Custom Feed + Custom Action Buttons</h1>
+      <p>
+        This example mounts <code>FloatingChartWidget</code> manually in custom mode with custom action buttons
+        and streams synthetic request durations every 600ms.
+      </p>
+
+      <section class="card">
+        <div class="row">
+          <button type="button" class="primary" id="btn-toggle-feed">Pause Feed</button>
+          <button type="button" id="btn-spike">Inject 180ms Spike</button>
+          <button type="button" id="btn-dump">Inspect Snapshot JSON</button>
+        </div>
+        <pre id="json-output">Click "Inspect Snapshot JSON" to view current stats...</pre>
+      </section>
+    </main>
+
+    <script src="../dist/floating-widget.js" data-manual-mount></script>
+    <script>
+      (function () {
+        const output = document.getElementById("json-output");
+        const toggleBtn = document.getElementById("btn-toggle-feed");
+
+        const widget = new window.FloatingChartWidget({
+          title: "API Watch",
+          initialSource: "custom",
+          initialCadence: "pause",
+          unit: "ms",
+          seedSeries: [22, 26, 24, 29, 31, 27, 25],
+          actions: [
+            {
+              label: "+ Spike",
+              onClick: (w) => w.pushPoint(Math.round(140 + Math.random() * 50))
+            },
+            {
+              label: "Dump JSON",
+              onClick: (w) => {
+                output.textContent = JSON.stringify(w.exportSnapshotJson(), null, 2);
+              }
+            },
+            {
+              label: "Clear",
+              onClick: (w) => w.clearSeries()
+            }
+          ]
+        });
+
+        widget.mount();
+        window.FloatingWidget = widget;
+
+        let running = true;
+        const timer = setInterval(() => {
+          if (!running) return;
+          const nextMs = Math.round(22 + Math.random() * 18 + (Math.random() > 0.88 ? 55 : 0));
+          widget.pushPoint(nextMs);
+        }, 600);
+
+        toggleBtn.addEventListener("click", () => {
+          running = !running;
+          toggleBtn.textContent = running ? "Pause Feed" : "Resume Feed";
+        });
+
+        document.getElementById("btn-spike").addEventListener("click", () => {
+          widget.pushPoint(180);
+        });
+
+        document.getElementById("btn-dump").addEventListener("click", () => {
+          output.textContent = JSON.stringify(widget.exportSnapshotJson(), null, 2);
+        });
+
+        window.addEventListener("beforeunload", () => clearInterval(timer));
+      })();
+    </script>
+  </body>
+</html>
