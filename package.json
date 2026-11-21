@@ -1,0 +1,43 @@
+{
+  "name": "floating-chart-widget",
+  "version": "1.0.0",
+  "description": "Zero-dependency draggable Shadow-DOM floating sparkline chart and per-route scratchpad widget with a Chrome Manifest V3 starter.",
+  "type": "module",
+  "main": "./dist/floating-widget.js",
+  "module": "./src/floating-widget.js",
+  "exports": {
+    ".": {
+      "import": "./src/floating-widget.js",
+      "default": "./dist/floating-widget.js"
+    }
+  },
+  "files": [
+    "src",
+    "dist",
+    "extension",
+    "assets",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "build": "node scripts/build.mjs",
+    "lint:brand": "node scripts/lint-brand.mjs"
+  },
+  "keywords": [
+    "shadow-dom",
+    "floating-widget",
+    "sparkline",
+    "svg-chart",
+    "chrome-extension",
+    "manifest-v3",
+    "picture-in-picture",
+    "scratchpad",
+    "telemetry"
+  ],
+  "author": "LevCodeLab",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
